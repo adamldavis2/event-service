@@ -14,7 +14,10 @@ spec:
     spec:
       containers:
       - name: demo-api
-        image: gcr.io/roi-dtcuser316/internal-image:v1.0.0
+        image: gcr.io/roi-dtcuser316/internal-image:v2.0.0
+        env:
+        - name: GOOGLE_CLOUD_PROJECT
+          value: roi-dtcuser316
         ports:
         - containerPort: 8082
             
