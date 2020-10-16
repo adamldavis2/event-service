@@ -71,6 +71,7 @@ app.post('/event', (req, res) => {
     const ev = { 
         title: req.body.title, 
         description: req.body.description,
+        datetime: req.body.datetime,
         likes: 0
      }
  
@@ -94,6 +95,7 @@ app.post('/events/:eventId/likes', (req, res) => {
                 const ev = { 
                     title: event.title || '', 
                     description: event.description || '',
+                    datetime:  event.datetime || '',
                     likes: (event.likes || 0) + 1
                 };
                 ref.set(ev).then(r => {
