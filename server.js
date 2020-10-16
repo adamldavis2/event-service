@@ -34,10 +34,10 @@ function getEvents(req, res) {
                     //get internal firestore id and assign to object
                     eventObj.id = doc.id;
                     //add object to array
-                    console.log(returnObj);
                     returnObj.events.push(eventObj);
                 });
             }
+            console.log(returnObj);
             res.json(returnObj);
         })
         .catch((err) => {
@@ -78,6 +78,38 @@ app.post('/event', (req, res) => {
     firestore.collection("Events").add(ev).then(ret => {
         getEvents(req, res);
     });
+});
+// ----------> likes
+app.post('/events/:eventId/likes', (req, res) => {
+
+    // get the Event and increment likes
+    console.log(`Event = ${req.params.eventId}`);
+
+    let ref = firestore.collection("Events").doc(req.params.eventId);
+    
+    ref.get().then(doc => {
+            if (doc.exists) {
+                console.log(doc.data());
+                let event = doc.data();
+                const ev = { 
+                    title: event.title || '', 
+                    description: event.description || '',
+                    likes: (event.likes || 0) + 1
+                };
+                ref.set(ev).then(r => {
+                    console.log(r);
+                    res.json( {status: 200} );
+                });
+            } else {
+                // doc.data() will be undefined in this case
+                console.log("No such document!");
+                res.json( {status: 500} );
+            }
+        }).catch(function(error) {
+            console.log("Error getting document:", error);
+            
+            res.json( {status: 500} );
+        });
 });
 
 app.use((err, req, res, next) => {
